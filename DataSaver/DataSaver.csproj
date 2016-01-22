@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectTypeGuids>{A3F8F2AB-B479-4A4A-A458-A89E7DC349F1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{92F3F6B6-09E3-44E2-93BE-6E85ECD0BE11}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>DataSaver</RootNamespace>
+    <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
+    <AssemblyName>DataSaver</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <Profiling>true</Profiling>
+    <UseRefCounting>true</UseRefCounting>
+    <UseSGen>true</UseSGen>
+    <IncludeMonoRuntime>false</IncludeMonoRuntime>
+    <CreatePackage>false</CreatePackage>
+    <CodeSigningKey>Mac Developer: James Clancey (MPFNK7YA6W)</CodeSigningKey>
+    <EnableCodeSigning>true</EnableCodeSigning>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <PackageSigningKey>Developer ID Installer</PackageSigningKey>
+    <XamMacArch>x86_64</XamMacArch>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CodeSignProvision>5ba84aec-05e0-4ce4-8b17-64b8178e8964</CodeSignProvision>
+    <CodeSignEntitlements>Entitlements.plist</CodeSignEntitlements>
+    <HttpClientHandler>HttpClientHandler</HttpClientHandler>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <LinkMode>SdkOnly</LinkMode>
+    <Profiling>false</Profiling>
+    <UseRefCounting>true</UseRefCounting>
+    <UseSGen>true</UseSGen>
+    <IncludeMonoRuntime>true</IncludeMonoRuntime>
+    <CreatePackage>true</CreatePackage>
+    <CodeSigningKey>Developer ID Application: Interactive Innovative Solutions LLC (6TMAULLKT8)</CodeSigningKey>
+    <EnableCodeSigning>true</EnableCodeSigning>
+    <EnablePackageSigning>true</EnablePackageSigning>
+    <PackageSigningKey>3rd Party Mac Developer Installer</PackageSigningKey>
+    <XamMacArch>x86_64</XamMacArch>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <HttpClientHandler>HttpClientHandler</HttpClientHandler>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Xamarin.Mac" />
+    <Reference Include="Xamarin.Insights">
+      <HintPath>..\packages\Xamarin.Insights.1.11.3\lib\Xamarin.Mac20\Xamarin.Insights.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Contents.json" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\AppIcon-128.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\AppIcon-128%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\AppIcon-16.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\AppIcon-16%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\AppIcon-256.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\AppIcon-256%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\AppIcon-32.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\AppIcon-32%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\AppIcon-512.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\AppIcon-512%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Info.plist" />
+    <None Include="packages.config" />
+    <None Include="Entitlements.plist" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Main.cs" />
+    <Compile Include="AppDelegate.cs" />
+    <Compile Include="NetworkWatcher.cs" />
+    <Compile Include="Helpers\BackBlazeHelper.cs" />
+    <Compile Include="Helpers\DropboxHelper.cs" />
+    <Compile Include="Helpers\BaseHelper.cs" />
+    <Compile Include="StateManager.cs" />
+    <Compile Include="StatusItemView.cs" />
+    <Compile Include="MissingApis\SupportDelegates.g.cs" />
+    <Compile Include="MissingApis\NSUserAutomatorTask.g.cs" />
+    <Compile Include="MissingApis\NSUserScriptTask.g.cs" />
+    <Compile Include="MissingApis\Messaging.g.cs" />
+    <Compile Include="MissingApis\Trampolines.g.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="SettingsViewController.cs" />
+    <Compile Include="SettingsViewController.designer.cs">
+      <DependentUpon>SettingsViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Plugins\CrossSettings.cs" />
+    <Compile Include="Plugins\ISettings.cs" />
+    <Compile Include="Plugins\Settings.cs" />
+    <Compile Include="ViewModels\WifiViewModel.cs" />
+    <Compile Include="ViewModels\ActionsViewModel.cs" />
+    <Compile Include="Models\WiFiClass.cs" />
+    <Compile Include="Plugins\Reachability\BaseConnectivity.cs" />
+    <Compile Include="Plugins\Reachability\ConnectionType.cs" />
+    <Compile Include="Plugins\Reachability\ConnectivityImplementation.cs" />
+    <Compile Include="Plugins\Reachability\CrossConnectivity.cs" />
+    <Compile Include="Plugins\Reachability\IConnectivity.cs" />
+    <Compile Include="Plugins\Reachability\Reachability.cs" />
+    <Compile Include="Helpers\CWNetworkExtensions.cs" />
+    <Compile Include="Cells\WifiCell.cs" />
+    <Compile Include="Cells\CheckBox.cs" />
+    <Compile Include="App.cs" />
+    <Compile Include="Cells\SimpleButton.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterfaceDefinition Include="Main.storyboard" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
+  <Import Project="..\packages\Xamarin.Insights.1.11.3\build\Xamarin.Mac20\Xamarin.Insights.targets" Condition="Exists('..\packages\Xamarin.Insights.1.11.3\build\Xamarin.Mac20\Xamarin.Insights.targets')" />
+  <ItemGroup>
+    <Folder Include="Helpers\" />
+    <Folder Include="MissingApis\" />
+    <Folder Include="Plugins\" />
+    <Folder Include="ViewModels\" />
+    <Folder Include="Models\" />
+    <Folder Include="Plugins\Reachability\" />
+    <Folder Include="Cells\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\statusBarConnected.png" />
+    <BundleResource Include="Resources\statusBarConnected%402x.png" />
+    <BundleResource Include="Resources\statusBarNormal.png" />
+    <BundleResource Include="Resources\statusBarNormal%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Xamarin.Tables\Xamarin.Tables\Xamarin.Tables.OSX.csproj">
+      <Project>{36A61C93-6C47-4CEB-BC6A-FF659CE6F7D3}</Project>
+      <Name>Xamarin.Tables.OSX</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

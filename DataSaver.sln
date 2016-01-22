@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataSaver", "DataSaver\DataSaver.csproj", "{92F3F6B6-09E3-44E2-93BE-6E85ECD0BE11}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Xamarin.Tables.Shared", "..\Xamarin.Tables\Xamarin.Tables\Xamarin.Tables.Shared.shproj", "{CCACF42C-24F0-4032-A17E-BF2B45F380F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.Tables.OSX", "..\Xamarin.Tables\Xamarin.Tables\Xamarin.Tables.OSX.csproj", "{36A61C93-6C47-4CEB-BC6A-FF659CE6F7D3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{92F3F6B6-09E3-44E2-93BE-6E85ECD0BE11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92F3F6B6-09E3-44E2-93BE-6E85ECD0BE11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92F3F6B6-09E3-44E2-93BE-6E85ECD0BE11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92F3F6B6-09E3-44E2-93BE-6E85ECD0BE11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36A61C93-6C47-4CEB-BC6A-FF659CE6F7D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36A61C93-6C47-4CEB-BC6A-FF659CE6F7D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36A61C93-6C47-4CEB-BC6A-FF659CE6F7D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36A61C93-6C47-4CEB-BC6A-FF659CE6F7D3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
