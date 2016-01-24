@@ -7,6 +7,8 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Xamarin.Tables.Shared", "..
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.Tables.OSX", "..\Xamarin.Tables\Xamarin.Tables\Xamarin.Tables.OSX.csproj", "{36A61C93-6C47-4CEB-BC6A-FF659CE6F7D3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs", "Libs", "{59B3BD5D-A400-41A2-99F5-738C5769980D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,5 +23,9 @@ Global
 		{36A61C93-6C47-4CEB-BC6A-FF659CE6F7D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36A61C93-6C47-4CEB-BC6A-FF659CE6F7D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36A61C93-6C47-4CEB-BC6A-FF659CE6F7D3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{36A61C93-6C47-4CEB-BC6A-FF659CE6F7D3} = {59B3BD5D-A400-41A2-99F5-738C5769980D}
+		{CCACF42C-24F0-4032-A17E-BF2B45F380F0} = {59B3BD5D-A400-41A2-99F5-738C5769980D}
 	EndGlobalSection
 EndGlobal

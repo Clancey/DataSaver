@@ -5,6 +5,7 @@ using System;
 using Foundation;
 using AppKit;
 using System.Threading.Tasks;
+using CoreGraphics;
 
 namespace DataSaver
 {
@@ -17,6 +18,7 @@ namespace DataSaver
 		{
 			base.ViewDidLoad ();
 			SetupWifi();
+			SetupActions();
 			RunOnStartup.State = Settings.Shared.StartAtLogin ? NSCellStateValue.On : NSCellStateValue.Off;
 			RunOnStartup.Activated += (s, e) => {
 				Settings.Shared.StartAtLogin = RunOnStartup.State == NSCellStateValue.On;
@@ -25,11 +27,20 @@ namespace DataSaver
 		WifiViewModel WifiViewModel;
 		void SetupWifi()
 		{
+			DeleteWifiButton.Enabled = false;
 			//WifiTable.AddColumn (new NSTableColumn ("Enabled"){ Title = "Enabled"});
-			WifiTable.AddColumn (new NSTableColumn ("Edit"){ Title = ""});
 			WifiTable.AddColumn (new NSTableColumn ("SSID"){ Title = "SSID", ResizingMask = NSTableColumnResizing.Autoresizing});
+			WifiTable.AddColumn (new NSTableColumn ("Edit"){ Title = ""});
 			//WifiTable.AddColumn (new NSTableColumn ("Delete"){ Title = ""});
-			WifiTable.Source = WifiViewModel = new WifiViewModel();
+			WifiTable.Source = WifiViewModel = new WifiViewModel
+			{
+				SelectionsChanged = ()=>
+				{
+					DeleteWifiButton.Enabled = WifiTable.SelectedRowCount != 0;
+				}
+			};
+
+
 		}
 
 		partial void DeleteWifi(Foundation.NSObject sender)
@@ -52,6 +63,23 @@ namespace DataSaver
 			
 		}
 
+		ActionsViewModel ActionsViewModel;
+		void SetupActions()
+		{
+			DeleteActionButton.Enabled = false;
+			//WifiTable.AddColumn (new NSTableColumn ("Enabled"){ Title = "Enabled"});
+			ActionsTable.AddColumn (new NSTableColumn("") { Title = "" });
+			ActionsTable.SizeLastColumnToFit();
+			ActionsTable.RowHeight = 170;
+			//WifiTable.AddColumn (new NSTableColumn ("Delete"){ Title = ""});
+			ActionsTable.Source = ActionsViewModel = new ActionsViewModel
+			{
+				SelectionsChanged = ()=>
+				{
+					DeleteActionButton.Enabled = ActionsTable.SelectedRowCount != 0;
+				}
+			};
+		}
 
 		partial void DeleteAction(Foundation.NSObject sender)
 		{
@@ -60,7 +88,22 @@ namespace DataSaver
 
 		partial void AddAction(Foundation.NSObject sender)
 		{
+			var frame = new CGRect(0, 0, 500, 300);
+			var view = new ActionView
+			{
+				Frame = frame,
+				EditMode = true,
+				Action = new ActionClass(),
+			};
 
+			var window = new NSWindow(frame, NSWindowStyle.Borderless, NSBackingStore.Buffered, false)
+			{
+				ContentView = view,
+			};
+			AppDelegate.CurrentWindow.BeginSheet(window, (nint obj) =>
+			{
+
+			});;
 		}
 	}
 }

@@ -43,6 +43,7 @@ namespace DataSaver
 		{
 			return Wifis.Count;
 		}
+
 		public override ICell GetICell(int section, int row)
 		{
 			var item = ItemFor(section, row);
@@ -50,6 +51,13 @@ namespace DataSaver
 			{
 				Wifi = item,
 			};
+		}
+
+		public Action SelectionsChanged { get; set; }
+		public override void SelectionDidChange(Foundation.NSNotification notification)
+		{
+			SelectionsChanged?.Invoke();
+			base.SelectionDidChange(notification);
 		}
 	}
 }

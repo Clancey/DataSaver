@@ -1,6 +1,9 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 using AppKit;
 using CoreGraphics;
+using Foundation;
 namespace DataSaver
 {
 	public static class App
@@ -21,6 +24,36 @@ namespace DataSaver
 			if (resp == (int)NSAlertButtonReturn.First)
 				return txt.StringValue;
 			return null;
+		}
+
+		static bool? _isSandboxed;
+		public static bool IsSandboxed
+		{
+			get{
+				if (!_isSandboxed.HasValue) {
+					try{
+						var path = System.Environment.GetFolderPath (Environment.SpecialFolder.MyMusic);
+						if(path.Contains("com.iis.DataSaver"))
+							_isSandboxed = true;
+						else{
+							var files = Directory.EnumerateFiles (path).Count();
+							_isSandboxed = false;
+						}
+					}
+					catch(Exception ex) {
+						_isSandboxed = true;
+					}
+				}
+				return _isSandboxed.Value;
+			}
+		}
+
+		public static NSUrl GetScriptPath
+		{
+			get
+			{
+				return NSFileManager.DefaultManager.GetUrls(NSSearchPathDirectory.ApplicationScriptsDirectory, NSSearchPathDomain.All).FirstOrDefault();
+			}
 		}
 	}
 }

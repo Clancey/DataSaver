@@ -119,6 +119,11 @@
     <Compile Include="Cells\CheckBox.cs" />
     <Compile Include="App.cs" />
     <Compile Include="Cells\SimpleButton.cs" />
+    <Compile Include="Cells\ActionCell.cs" />
+    <Compile Include="Models\ActionClass.cs" />
+    <Compile Include="Cells\ActionView.cs" />
+    <Compile Include="Helpers\Style.cs" />
+    <Compile Include="Cells\NSColorView.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Main.storyboard" />
