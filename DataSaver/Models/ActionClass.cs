@@ -1,4 +1,5 @@
 ﻿using System;
+using SQLite;
 namespace DataSaver
 {
 
@@ -7,9 +8,14 @@ namespace DataSaver
 		BashScript,
 		Command,
 		AutomatorScript,
+		Dropbox,
+		Backblaze,
 	}
 	public class ActionClass
 	{
+		[PrimaryKeyAttribute, AutoIncrement]
+		public int Id { get; set; }
+
 		public bool Enabled { get; set; }
 
 		public string Name { get; set; }

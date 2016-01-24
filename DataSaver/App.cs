@@ -55,6 +55,23 @@ namespace DataSaver
 				return NSFileManager.DefaultManager.GetUrls(NSSearchPathDirectory.ApplicationScriptsDirectory, NSSearchPathDomain.All).FirstOrDefault();
 			}
 		}
+
+		public static readonly WifiViewModel WiFiViewModel = new WifiViewModel();
+
+
+		public static readonly ActionsViewModel ActionsViewModel = new ActionsViewModel();
+
+		public static async void CheckStatus()
+		{
+
+			if (!StateManager.IsEnabled)
+				return;
+			var shouldPause = await NetworkWatcher.ShouldPause ();
+			if (shouldPause)
+				StateManager.PauseEverything ();
+			else
+				StateManager.Resume ();
+		}
 	}
 }
 

@@ -1,21 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DataSaver
 {
 	public static class StateManager
 	{
-
-		static StateManager ()
-		{
-			Helpers = new List<BaseHelper> {
-				new DropboxHelper (),
-			};
-			
-			var back = new BackBlazeHelper ();
-			if (back.IsInstalled)
-				Helpers.Add (back);
-		}
 
 		public static Action StateChanged { get; set; }
 
@@ -58,14 +48,14 @@ namespace DataSaver
 			else
 				Resume ();
 		}
-
-		public static List<BaseHelper> Helpers;
+		public static Dictionary<int,BaseHelper> Helpers;
 		public static void PauseEverything ()
 		{
 			if (IsPaused)
 				return;
 			IsPaused = true;
-			Helpers.ForEach (x => x.Pause ());
+			var helpers = App.ActionsViewModel.Actions.Select(x => BaseHelper.CreateHelper(x,true)).ToList();
+			helpers.ForEach (x => x.Pause ());
 		}
 
 		public static void Resume ()
@@ -73,9 +63,13 @@ namespace DataSaver
 			if (!IsPaused)
 				return;
 			IsPaused = false;
-			Helpers.ForEach (x => x.Resume ());
+
+			var helpers = App.ActionsViewModel.Actions.Select(x => BaseHelper.CreateHelper(x,false)).ToList();
+			helpers.ForEach (x => x.Resume ());
 			
 		}
+
+
 	}
 }
 

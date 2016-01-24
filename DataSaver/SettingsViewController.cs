@@ -11,44 +11,44 @@ namespace DataSaver
 {
 	public partial class SettingsViewController : NSViewController
 	{
-		public SettingsViewController (IntPtr handle) : base (handle)
+		public SettingsViewController(IntPtr handle) : base(handle)
 		{
 		}
-		public override void ViewDidLoad ()
+		public override void ViewDidLoad()
 		{
-			base.ViewDidLoad ();
+			base.ViewDidLoad();
 			SetupWifi();
 			SetupActions();
 			RunOnStartup.State = Settings.Shared.StartAtLogin ? NSCellStateValue.On : NSCellStateValue.Off;
-			RunOnStartup.Activated += (s, e) => {
+			RunOnStartup.Activated += (s, e) =>
+			{
 				Settings.Shared.StartAtLogin = RunOnStartup.State == NSCellStateValue.On;
 			};
 		}
-		WifiViewModel WifiViewModel;
+
 		void SetupWifi()
 		{
 			DeleteWifiButton.Enabled = false;
 			//WifiTable.AddColumn (new NSTableColumn ("Enabled"){ Title = "Enabled"});
-			WifiTable.AddColumn (new NSTableColumn ("SSID"){ Title = "SSID", ResizingMask = NSTableColumnResizing.Autoresizing});
-			WifiTable.AddColumn (new NSTableColumn ("Edit"){ Title = ""});
+			WifiTable.AddColumn(new NSTableColumn("SSID") { Title = "SSID", ResizingMask = NSTableColumnResizing.Autoresizing });
+			WifiTable.AddColumn(new NSTableColumn("Edit") { Title = "" });
 			//WifiTable.AddColumn (new NSTableColumn ("Delete"){ Title = ""});
-			WifiTable.Source = WifiViewModel = new WifiViewModel
-			{
-				SelectionsChanged = ()=>
+			WifiTable.Source = App.WiFiViewModel;
+			App.WiFiViewModel.SelectionsChanged = () =>
 				{
 					DeleteWifiButton.Enabled = WifiTable.SelectedRowCount != 0;
-				}
-			};
+				};
 
 
 		}
 
 		partial void DeleteWifi(Foundation.NSObject sender)
 		{
-
+			var row = WifiTable.SelectedRow;
+			App.WiFiViewModel.Delete((int)row);
 		}
-
-		async partial void AddWifi(Foundation.NSObject sender)
+			
+		partial void AddWifi(Foundation.NSObject sender)
 		{
 			var text = App.GetTextInput("SSID", "SSID that start with *. will block all that contain that word", NetworkWatcher.CurrentSSID);
 			if (string.IsNullOrWhiteSpace(text))
@@ -57,32 +57,27 @@ namespace DataSaver
 			{
 				SSID = text
 			};
-			//TODO Save
-			WifiViewModel.Wifis.Add(wifi);
-			WifiViewModel.ReloadData();
-			
+			App.WiFiViewModel.Add(wifi);
+
 		}
 
-		ActionsViewModel ActionsViewModel;
 		void SetupActions()
 		{
 			DeleteActionButton.Enabled = false;
-			//WifiTable.AddColumn (new NSTableColumn ("Enabled"){ Title = "Enabled"});
-			ActionsTable.AddColumn (new NSTableColumn("") { Title = "" });
+			ActionsTable.AddColumn(new NSTableColumn("") { Title = "" });
 			ActionsTable.SizeLastColumnToFit();
 			ActionsTable.RowHeight = 170;
-			//WifiTable.AddColumn (new NSTableColumn ("Delete"){ Title = ""});
-			ActionsTable.Source = ActionsViewModel = new ActionsViewModel
-			{
-				SelectionsChanged = ()=>
+			ActionsTable.Source = App.ActionsViewModel;
+			App.ActionsViewModel.SelectionsChanged = () =>
 				{
 					DeleteActionButton.Enabled = ActionsTable.SelectedRowCount != 0;
-				}
-			};
+				};
 		}
 
 		partial void DeleteAction(Foundation.NSObject sender)
 		{
+			var row = ActionsTable.SelectedRow;
+			App.ActionsViewModel.Delete((int)row);
 
 		}
 
@@ -96,14 +91,16 @@ namespace DataSaver
 				Action = new ActionClass(),
 			};
 
-			var window = new NSWindow(frame, NSWindowStyle.Borderless, NSBackingStore.Buffered, false)
+
+			var window = new NSWindow(frame, NSWindowStyle.Borderless | NSWindowStyle.Titled, NSBackingStore.Buffered, false)
 			{
+				Title = "Add Action",
 				ContentView = view,
 			};
 			AppDelegate.CurrentWindow.BeginSheet(window, (nint obj) =>
 			{
 
-			});;
+			}); ;
 		}
 	}
 }

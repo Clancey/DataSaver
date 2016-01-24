@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Xamarin.Tables;
+using Xamarin;
 namespace DataSaver
 {
 	public class WifiViewModel : TableViewModel<WiFiClass>
 	{
-		public List<WiFiClass> Wifis = new List<WiFiClass>
+
+		public static WiFiClass[] DefaultWifis = new[]
 		{
 			new WiFiClass{
 				Enabled = true,
@@ -20,8 +23,55 @@ namespace DataSaver
 				SSID="gogoinflight",
 			},
 		};
+
+		public List<WiFiClass> Wifis { get; set; } = new List<WiFiClass>();
+
 		public WifiViewModel()
 		{
+			Wifis = Database.Main.Table<WiFiClass>().ToList();
+			foreach (var wifi in DefaultWifis)
+			{
+				var exists = Wifis.Any(x => x.SSID.ToLower() == wifi.SSID.ToLower());
+				if (exists)
+					continue;
+				Database.Main.InsertOrReplace(wifi);
+				Wifis.Add(wifi);
+			}
+		}
+
+		public void Add(WiFiClass wifi)
+		{
+			Database.Main.InsertOrReplace(wifi);
+			Wifis = Database.Main.Table<WiFiClass>().ToList();
+
+			App.CheckStatus();
+			ReloadData();
+		}
+
+		public void Save(WiFiClass wifi)
+		{
+			Database.Main.InsertOrReplace(wifi);
+			Wifis = Database.Main.Table<WiFiClass>().ToList();
+			ReloadData();
+		}
+
+		public void Delete(int index)
+		{
+			try
+			{
+				Delete(Wifis[index]);
+			}
+			catch (Exception ex)
+			{
+				Insights.Report(ex);
+			}
+		}
+		public void Delete(WiFiClass wifi)
+		{
+			Database.Main.Delete(wifi);
+			Wifis = Database.Main.Table<WiFiClass>().ToList();
+			App.CheckStatus();
+			ReloadData();
 		}
 
 		public override string HeaderForSection(int section)

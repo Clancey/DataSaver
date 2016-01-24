@@ -2,6 +2,7 @@
 using Foundation;
 using Connectivity.Plugin;
 using CoreGraphics;
+using System.Threading.Tasks;
 
 namespace DataSaver
 {
@@ -16,26 +17,18 @@ namespace DataSaver
 
 		public override void DidFinishLaunching (NSNotification notification)
 		{
+			App.CheckStatus();
 		}
 
-		async void CrossConnectivity_Current_ConnectivityChanged (object sender, Connectivity.Plugin.Abstractions.ConnectivityChangedEventArgs e)
+		void CrossConnectivity_Current_ConnectivityChanged (object sender, Connectivity.Plugin.Abstractions.ConnectivityChangedEventArgs e)
 		{
-			if (!StateManager.IsEnabled)
-				return;
-			var hasInternet = await NetworkWatcher.IsIphone ();
-			if (hasInternet)
-				StateManager.PauseEverything ();
-			else
-				StateManager.Resume ();
-		}
-		async void CheckInternet()
-		{
-			var isiPhone = await NetworkWatcher.IsIphone ();
+			App.CheckStatus();
 		}
 
 		public override void WillTerminate (NSNotification notification)
 		{
 			// Insert code here to tear down your application
+			StateManager.Resume ();
 		}
 		NSStatusItem item;
 		NSImage onImage;

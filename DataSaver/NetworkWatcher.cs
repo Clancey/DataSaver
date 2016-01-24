@@ -65,6 +65,39 @@ namespace DataSaver
 				return usb.Result;
 			return wifi.Result;
 		}
+
+		public static async Task<bool> ShouldPause()
+		{
+			var iPhoneTask = IsIphone();
+			var isWifi = IsBlockedWifi();
+			if (isWifi)
+				return true;
+			return await iPhoneTask;
+
+		}
+
+		public static bool IsBlockedWifi()
+		{
+			var ssid = CurrentSSID.ToLower();
+			foreach (var wifi in App.WiFiViewModel.Wifis)
+			{
+				var checkContains = wifi.SSID.Contains("*.");
+				var name = wifi.SSID.Replace("*.","");
+				if (checkContains)
+				{
+					var contains = ssid.IndexOf(name, StringComparison.InvariantCultureIgnoreCase) >= 0;
+					if (contains)
+						return true;
+					continue;
+				}
+
+				var isMatch = name.ToLower() == ssid;
+				if (isMatch)
+					return true;
+
+			}
+			return false;
+		}
 	}
 }
 

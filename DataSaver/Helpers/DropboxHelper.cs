@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace DataSaver
 {
@@ -25,6 +26,26 @@ namespace DataSaver
 				await RunAutomatorScript("resumeDropbox.workflow");
 			else
 				await RunProcess("pkill","-cont  Dropbox");
+		}
+
+		public override bool IsInstalled {
+			get {
+				return IsDropboxInstalled;
+			}
+			set {
+				base.IsInstalled = value;
+			}
+		}
+		static string DropboxPath = Path.Combine(Locations.ApplicationsPath, "Dropbox.app");
+		public static bool IsDropboxInstalled
+		{
+			get {
+				if (App.IsSandboxed)
+				{
+					return AutomatorFileExists("pauseDropbox.workflow") && AutomatorFileExists("resumeDropbox.workflow");
+				}
+				return Directory.Exists(DropboxPath);
+			}
 		}
 	}
 }

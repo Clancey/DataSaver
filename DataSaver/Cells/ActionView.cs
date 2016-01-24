@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using AppKit;
 using CoreGraphics;
+using Foundation;
 
 namespace DataSaver
 {
@@ -56,7 +58,13 @@ namespace DataSaver
 		bool HasExtra;
 		public ActionView()
 		{
-			BackgroundColor = NSColor.LabelColor.ColorWithAlphaComponent(.15f);
+			BackgroundColor = NSColor.LightGray.ColorWithAlphaComponent(.1f);
+			Layer = new CoreAnimation.CALayer
+			{
+				BorderColor = NSColor.DarkGray.CGColor,
+				BorderWidth = 1f,
+				CornerRadius = 5f,
+			};
 
 			AddSubview(CheckBox = new CheckBox
 			{
@@ -64,7 +72,8 @@ namespace DataSaver
 				ValueChanged = (b) =>
 				{
 					Action.Enabled = b;
-					//TODO: Save
+					if(!EditMode)
+						App.ActionsViewModel.Save(Action);
 				},
 			});
 
@@ -87,6 +96,7 @@ namespace DataSaver
 			{
 				Enabled = false,
 			});
+			PauseType.Add(ActionTypes);
 
 			AddSubview(PauseText = new NSTextField
 			{
@@ -101,12 +111,48 @@ namespace DataSaver
 			AddSubview(ResumeType = new NSComboBox
 			{
 				Enabled = false,
+				DataSource = new DropdownSource(),
 			});
+
+			ResumeType.Add(ActionTypes);
 
 			AddSubview(ResumeText = new NSTextField
 			{
 
 			}.StyleAsLabel());
+		}
+		static NSString[] ActionTypes = new []
+		{
+			(NSString)"BashScript",
+			(NSString)"Command",
+			(NSString)"AutomatorScript",
+		};
+		class DropdownSource : NSComboBoxDataSource
+		{
+			public List<string> ActionTypes = new List<string>();
+			public DropdownSource()
+			{
+				
+			}
+			public override string CompletedString(NSComboBox comboBox, string uncompletedString)
+			{
+				return ActionTypes.Find(n => n.StartsWith(uncompletedString, StringComparison.InvariantCultureIgnoreCase));
+			}
+
+			public override nint IndexOfItem(NSComboBox comboBox, string value)
+			{
+				return ActionTypes.FindIndex(n => n.Equals(value, StringComparison.InvariantCultureIgnoreCase));
+			}
+
+			public override nint ItemCount(NSComboBox comboBox)
+			{
+				return ActionTypes.Count;
+			}
+
+			public override NSObject ObjectValueForItem(NSComboBox comboBox, nint index)
+			{
+				return NSObject.FromObject(ActionTypes[(int)index]);
+			}
 		}
 
 		void CheckIfNeedsExtra()
@@ -117,7 +163,6 @@ namespace DataSaver
 			HasExtra = true;
 
 			CheckBox.RemoveFromSuperview();
-			NameLabel.RemoveFromSuperview();
 
 			NameText.StyleAsTextEntry();
 
@@ -127,13 +172,13 @@ namespace DataSaver
 			ResumeType.Enabled = true;
 			ResumeText.StyleAsTextEntry();
 
-
 			AddSubview(SaveButton = new SimpleButton
 			{
 				Title = "Save",
 				Tapped = (b)=>
 				{
-					//TODO: Save and dismiss
+					App.ActionsViewModel.Save(Action);
+					AppDelegate.CurrentWindow.EndSheet(this.Window);
 				}
 			});
 
@@ -142,7 +187,6 @@ namespace DataSaver
 				Title = "Cancel",
 				Tapped = (b)=>
 				{
-					//TODO: dismiss
 					AppDelegate.CurrentWindow.EndSheet(this.Window);
 				}
 			});
@@ -173,12 +217,22 @@ namespace DataSaver
 
 		public void UpdateAction()
 		{
+
 			CheckBox.Checked = Action?.Enabled ?? false;
 			NameText.StringValue = Action?.Name ?? "";
-			//PauseType = Action?.PauseCommandType
+			PauseType.Select(new NSString(Action?.PauseCommandType.ToString()));
 			PauseText.StringValue = Action?.PauseCommand ?? "";
-			//ResumeType = Action?.ResumeCommandType
+			ResumeType.Select(new NSString(Action?.ResumeCommandType.ToString()));
 			ResumeText.StringValue = Action?.ResumeCommand ?? "";
+
+			bool standard = Action.PauseCommandType == ActionType.Backblaze || Action.PauseCommandType == ActionType.Dropbox;
+			PauseLabel.Hidden = standard;
+			PauseType.Hidden = standard;
+			PauseType.Hidden = standard;
+			ResumeLabel.Hidden = standard;
+			ResumeType.Hidden = standard;
+			ResumeType.Hidden = standard;
+
 		}
 
 		void OpenInFinder()
@@ -188,7 +242,7 @@ namespace DataSaver
 
 		protected const float Padding = 5f;
 		protected const float TwicePadding = Padding * 2;
-		protected const float ComboBoxWidth = 100f;
+		protected const float ComboBoxWidth = 150f;
 		const float durationWidth = 30f;
 		const float ratingWidth = 50f;
 		const float minTitleWidth = 200f;
@@ -210,7 +264,7 @@ namespace DataSaver
 			CheckBox.SizeToFit();
 
 			var bounds = Bounds;
-
+			Layer.Frame = bounds;
 			var frame = CheckBox.Frame;
 			frame.X = Padding;
 			frame.Y = Padding;
@@ -223,8 +277,9 @@ namespace DataSaver
 			{
 				NameLabel.SizeToFit();
 				frame = NameLabel.Frame;
-				frame.X = x;
-				frame.Y = y;
+				frame.X = Padding;
+				frame.Y = Padding;
+				NameLabel.Frame = frame;
 				x = frame.Right + Padding;
 			}
 

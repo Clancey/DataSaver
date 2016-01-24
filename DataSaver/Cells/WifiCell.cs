@@ -19,7 +19,7 @@ namespace DataSaver
 				check.ValueChanged = (value) =>
 				{
 					Wifi.Enabled = value;
-					//TODO: Save WIFI 
+					App.WiFiViewModel.Add(Wifi);
 				};
 				return check;
 			}
@@ -33,9 +33,9 @@ namespace DataSaver
 					var text = App.GetTextInput("SSID", "SSID that start with *. will block all that contain that word", Wifi.SSID);
 					if (string.IsNullOrWhiteSpace(text) || text == Wifi.SSID)
 						return;
+					App.WiFiViewModel.Delete(Wifi);
 					Wifi.SSID = text;
-					//TODO: Save WIFI
-					tableView.ReloadData();
+					App.WiFiViewModel.Add(Wifi);
 				};
 				return linkButton;
 			}

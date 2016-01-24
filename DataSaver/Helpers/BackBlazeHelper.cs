@@ -11,13 +11,16 @@ namespace DataSaver
 		}
 		public override bool IsInstalled {
 			get {
-				return File.Exists (FilePath);
+				return IsBackblazeInstalled;
 			}
 			set {
 				base.IsInstalled = value;
 			}
 		}
-
+		public static bool IsBackblazeInstalled
+		{
+			get { return File.Exists(FilePath); }
+		}
 		const string FilePath  = "/Library/Backblaze.bzpkg/bztransmit";
 
 		public override void Pause()

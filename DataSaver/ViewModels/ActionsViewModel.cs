@@ -1,32 +1,81 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Xamarin.Tables;
 namespace DataSaver
 {
 	public class ActionsViewModel : TableViewModel<ActionClass>
 	{
-		public List<ActionClass> Actions = new List<ActionClass>
+		public static ActionClass[] DefaultsAction = new ActionClass[]
 		{
 			new ActionClass{
 				Enabled = true,
 				Name = "Dropbox",
-				PauseCommandType = ActionType.AutomatorScript,
-				PauseCommand = "foo",
-				ResumeCommand = "foo",
-				ResumeCommandType = ActionType.AutomatorScript,
+				PauseCommandType = ActionType.Dropbox,
+				ResumeCommandType = ActionType.Dropbox,
 			},
 			new ActionClass{
 
 				Enabled = true,
-				Name = "Dropbox",
-				PauseCommandType = ActionType.Command,
-				PauseCommand = "foo",
-				ResumeCommand = "foo",
-				ResumeCommandType = ActionType.Command,
+				Name = "Backblaze",
+				PauseCommandType = ActionType.Backblaze,
+				ResumeCommandType = ActionType.Backblaze,
 			},
+		};
+		public List<ActionClass> Actions = new List<ActionClass>
+		{
+			
 		};
 		public ActionsViewModel()
 		{
+			Actions = Database.Main.Table<ActionClass>().ToList();
+			foreach (var action in DefaultsAction)
+			{
+				var exists = Actions.Any(x => x.PauseCommandType == action.PauseCommandType);
+				if (exists)
+					continue;
+
+				var helper = BaseHelper.CreateHelper(action, true);
+				if (!helper.IsInstalled)
+					continue;
+				
+				Database.Main.Insert(action);
+				Actions.Add(action);
+			}
+		}
+
+		public void Add(ActionClass wifi)
+		{
+			if (wifi.Id == 0)
+				Database.Main.Insert(wifi);
+			else
+				Database.Main.InsertOrReplace(wifi);
+			Actions = Database.Main.Table<ActionClass>().ToList();
+			ReloadData();
+		}
+
+		public void Save(ActionClass wifi)
+		{
+			Add(wifi);
+		}
+
+		public void Delete(int index)
+		{
+			try
+			{
+				Delete(Actions[index]);
+			}
+			catch (Exception ex)
+			{
+				Xamarin.Insights.Report(ex);
+			}
+		}
+
+		public void Delete(ActionClass wifi)
+		{
+			Database.Main.Delete(wifi);
+			Actions = Database.Main.Table<ActionClass>().ToList();
+			ReloadData();
 		}
 		public override string HeaderForSection(int section)
 		{

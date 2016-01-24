@@ -7,17 +7,50 @@ using System.Linq;
 
 namespace DataSaver
 {
-	public abstract class BaseHelper
+	public class BaseHelper
 	{
 		public BaseHelper()
 		{
 			IsEnabled = true;
 		}
+
+		public ActionClass Action { get; set; }
+
 		public string Title { get; set; }
 
-		public abstract void Pause ();
+		public async virtual void Pause ()
+		{
+			switch (Action.PauseCommandType)
+			{
+				case ActionType.AutomatorScript:
+					await RunAutomatorScript(Action.PauseCommand);
+					return;
+				case ActionType.BashScript:
+					await RunBash(Action.PauseCommand);
+					return;
+				case ActionType.Command:
+					await RunProcess(Action.PauseCommand, "");
+					return;
+			}
+			throw new NotImplementedException();
+		}
 
-		public abstract void Resume ();
+		public async virtual void Resume ()
+		{
+			switch (Action.PauseCommandType)
+			{
+				case ActionType.AutomatorScript:
+					await RunAutomatorScript(Action.ResumeCommand);
+				return;
+				case ActionType.BashScript:
+					await RunBash(Action.ResumeCommand);
+				return;
+				case ActionType.Command:
+					await RunProcess(Action.ResumeCommand, "");
+				return;
+			}
+			throw new NotImplementedException();
+		}
 
 		public virtual bool IsEnabled { get; set; }
 
@@ -85,9 +118,33 @@ namespace DataSaver
 		static NSUrl GetAutomatorUri(string script)
 		{
 
-			var baseUrls = NSFileManager.DefaultManager.GetUrls (NSSearchPathDirectory.ApplicationScriptsDirectory, NSSearchPathDomain.All).FirstOrDefault();
-			var url = new NSUrl (script, baseUrls);
+			var baseUrls = NSFileManager.DefaultManager.GetUrls(NSSearchPathDirectory.ApplicationScriptsDirectory, NSSearchPathDomain.All).FirstOrDefault();
+			var url = new NSUrl(script, baseUrls);
 			return url;
+		}
+
+		public static BaseHelper CreateHelper(ActionClass actionClass, bool pause)
+		{
+			var type = pause ? actionClass.PauseCommandType : actionClass.ResumeCommandType;
+			switch (type)
+			{
+				case ActionType.Backblaze:
+					return new BackBlazeHelper
+					{
+						Action = actionClass,
+					};
+				case ActionType.Dropbox:
+					return new DropboxHelper
+					{
+						Action = actionClass,
+					};
+				default:
+					return new BaseHelper
+					{
+						Action = actionClass
+					};
+			}
+
 		}
 	}
 }
