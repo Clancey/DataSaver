@@ -20,7 +20,7 @@ namespace DataSaver
 		{
 			get
 			{
-				return CWInterface.MainInterface?.Ssid;
+				return CWInterface.MainInterface?.Ssid ?? "";
 			}
 		}
 		public static bool IsIosTethered ()
